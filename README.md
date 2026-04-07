@@ -26,18 +26,18 @@ Many finance tracker apps only focus on spending. NotJustSpent gives users the o
 
 ## Features
 
--  **Single-page application** — no page reloads; all views are dynamically rendered
+-  **Single-page application** no page reloads; all views are dynamically rendered
 -  **Full CRUD** on all three collections (Expenses, Income, Savings)
 -  **Add expense** with title, category, amount, date, and optional note
--  **Category filter chips** — filter expenses by Food, Transport, Shopping, Entertainment, Study, or Bills
--  **Auto-select category** — clicking a chip pre-fills the category dropdown in the add form
--  **Monthly filter** — all records and charts respond to the selected month
--  **Edit modal** — inline editing without leaving the page
--  **Analyse page** — 4 charts including daily spending bar, expense category donut, income bar, savings bar
--  **Summary stats** — monthly totals for spent, income, and savings with net balance
--  **Motivational messages** — contextual feedback based on the month's financial data
--  **Error toasts** — red/dark toast notifications for success and failure states
--  **AUD currency** — amounts displayed as AUD $
+-  **Category filter chips** filter expenses by Food, Transport, Shopping, Entertainment, Study, or Bills
+-  **Auto-select category** clicking a chip pre-fills the category dropdown in the add form
+-  **Monthly filter** all records and charts respond to the selected month
+-  **Edit modal** inline editing without leaving the page
+-  **Analyse page** 4 charts including daily spending bar, expense category donut, income bar, savings bar
+-  **Summary stats** monthly totals for spent, income, and savings with net balance
+-  **Motivational messages** contextual feedback based on the month's financial data
+-  **Error toasts** red/dark toast notifications for success and failure states
+-  **AUD currency** amounts displayed as AUD $
 
 ---
 
