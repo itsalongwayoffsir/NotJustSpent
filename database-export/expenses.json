@@ -1,0 +1,212 @@
+[
+  {
+    "title": "Woolworths groceries",
+    "category": "Food",
+    "amount": 87.5,
+    "date": "2026-04-01",
+    "description": "Weekly grocery shop"
+  },
+  {
+    "title": "Morning coffee",
+    "category": "Food",
+    "amount": 5.8,
+    "date": "2026-04-01",
+    "description": "Flat white at campus caf\u00e9"
+  },
+  {
+    "title": "Opal card top-up",
+    "category": "Transport",
+    "amount": 30.0,
+    "date": "2026-04-02",
+    "description": "Weekly commute"
+  },
+  {
+    "title": "Netflix",
+    "category": "Bills",
+    "amount": 22.99,
+    "date": "2026-04-02",
+    "description": "Monthly subscription"
+  },
+  {
+    "title": "Sushi lunch",
+    "category": "Food",
+    "amount": 14.5,
+    "date": "2026-04-03",
+    "description": "Lunch near uni"
+  },
+  {
+    "title": "Python textbook",
+    "category": "Study",
+    "amount": 68.0,
+    "date": "2026-04-04",
+    "description": "Required textbook for COMP course"
+  },
+  {
+    "title": "Kmart haul",
+    "category": "Shopping",
+    "amount": 43.8,
+    "date": "2026-04-05",
+    "description": "Home essentials"
+  },
+  {
+    "title": "Movie tickets",
+    "category": "Entertainment",
+    "amount": 38.0,
+    "date": "2026-04-05",
+    "description": "2 tickets for Dune with friends"
+  },
+  {
+    "title": "Electricity bill",
+    "category": "Bills",
+    "amount": 95.4,
+    "date": "2026-04-06",
+    "description": "March electricity"
+  },
+  {
+    "title": "Poke bowl",
+    "category": "Food",
+    "amount": 17.9,
+    "date": "2026-04-07",
+    "description": "Dinner after class"
+  },
+  {
+    "title": "Uber to airport",
+    "category": "Transport",
+    "amount": 52.0,
+    "date": "2026-04-08",
+    "description": "Early morning ride"
+  },
+  {
+    "title": "Coursera subscription",
+    "category": "Study",
+    "amount": 49.0,
+    "date": "2026-04-09",
+    "description": "Monthly online learning"
+  },
+  {
+    "title": "Coles top-up",
+    "category": "Food",
+    "amount": 34.2,
+    "date": "2026-04-09",
+    "description": "Midweek snacks and drinks"
+  },
+  {
+    "title": "Gym membership",
+    "category": "Bills",
+    "amount": 55.0,
+    "date": "2026-04-10",
+    "description": "Monthly gym fee"
+  },
+  {
+    "title": "Thai takeaway",
+    "category": "Food",
+    "amount": 22.5,
+    "date": "2026-04-11",
+    "description": "Pad thai and spring rolls"
+  },
+  {
+    "title": "ASOS order",
+    "category": "Shopping",
+    "amount": 89.95,
+    "date": "2026-04-12",
+    "description": "New jacket and two tops"
+  },
+  {
+    "title": "Spotify",
+    "category": "Bills",
+    "amount": 11.99,
+    "date": "2026-04-13",
+    "description": "Monthly music subscription"
+  },
+  {
+    "title": "Bus fare",
+    "category": "Transport",
+    "amount": 8.4,
+    "date": "2026-04-14",
+    "description": "Trip to library"
+  },
+  {
+    "title": "Bubble tea",
+    "category": "Food",
+    "amount": 8.5,
+    "date": "2026-04-14",
+    "description": "Brown sugar milk tea"
+  },
+  {
+    "title": "Printing & stationery",
+    "category": "Study",
+    "amount": 12.6,
+    "date": "2026-04-15",
+    "description": "Assignment printing + highlighters"
+  },
+  {
+    "title": "Bowling night",
+    "category": "Entertainment",
+    "amount": 28.0,
+    "date": "2026-04-16",
+    "description": "Group outing with classmates"
+  },
+  {
+    "title": "Internet bill",
+    "category": "Bills",
+    "amount": 79.0,
+    "date": "2026-04-17",
+    "description": "Monthly NBN plan"
+  },
+  {
+    "title": "Woolworths groceries",
+    "category": "Food",
+    "amount": 91.3,
+    "date": "2026-04-18",
+    "description": "Weekly grocery shop"
+  },
+  {
+    "title": "Train to CBD",
+    "category": "Transport",
+    "amount": 6.2,
+    "date": "2026-04-19",
+    "description": "Weekend trip to city"
+  },
+  {
+    "title": "Brunch at caf\u00e9",
+    "category": "Food",
+    "amount": 26.0,
+    "date": "2026-04-20",
+    "description": "Eggs benedict and coffee"
+  },
+  {
+    "title": "iCloud storage",
+    "category": "Bills",
+    "amount": 1.49,
+    "date": "2026-04-21",
+    "description": "50GB monthly plan"
+  },
+  {
+    "title": "Stationery haul",
+    "category": "Shopping",
+    "amount": 31.5,
+    "date": "2026-04-22",
+    "description": "New planner and pens from Officeworks"
+  },
+  {
+    "title": "Dumpling dinner",
+    "category": "Food",
+    "amount": 19.8,
+    "date": "2026-04-23",
+    "description": "Dinner in Chinatown"
+  },
+  {
+    "title": "Concert ticket",
+    "category": "Entertainment",
+    "amount": 75.0,
+    "date": "2026-04-24",
+    "description": "Local band at Manning Bar"
+  },
+  {
+    "title": "Uber ride home",
+    "category": "Transport",
+    "amount": 18.5,
+    "date": "2026-04-24",
+    "description": "Late night after concert"
+  }
+]
