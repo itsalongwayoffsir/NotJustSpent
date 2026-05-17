@@ -1,64 +1,65 @@
-const express = require("express");
-const router  = express.Router();
+const express  = require("express");
+const router   = express.Router();
 const mongoose = require("mongoose");
+const { authMiddleware } = require("../middleware/auth");
+const { logActivity }    = require("./auth");
 
 // ── Schema ──────────────────────────────────────────
 const expenseSchema = new mongoose.Schema({
-  title:    { type: String, required: true, trim: true },
-  category: { type: String, required: true, enum: ["Food","Transport","Shopping","Entertainment","Study","Bills"] },
-  amount:   { type: Number, required: true, min: 0 },
-  date:     { type: String, required: true },   // stored as "YYYY-MM-DD"
+  userId:      { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  title:       { type: String, required: true, trim: true },
+  category:    { type: String, required: true, enum: ["Food","Transport","Shopping","Entertainment","Study","Bills"] },
+  amount:      { type: Number, required: true, min: 0 },
+  date:        { type: String, required: true },
   description: { type: String, default: "" },
-  note:        { type: String, default: "" }, // kept for backwards compatibility
+  note:        { type: String, default: "" },
 }, { timestamps: true });
 
 const Expense = mongoose.model("Expense", expenseSchema);
 
-// ── READ all (optionally filter by month: ?month=2026-04) ──
+// All routes require auth
+router.use(authMiddleware);
+
+// ── READ ──────────────────────────────────────────────
 router.get("/", async (req, res) => {
   try {
-    const filter = {};
+    const filter = { userId: req.user.id };
     if (req.query.month) filter.date = { $regex: `^${req.query.month}` };
     const expenses = await Expense.find(filter).sort({ date: -1 });
     res.json(expenses);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ── CREATE ──────────────────────────────────────────
+// ── CREATE ────────────────────────────────────────────
 router.post("/", async (req, res) => {
   try {
-    const expense = new Expense(req.body);
-    await expense.save();
+    const expense = await Expense.create({ ...req.body, userId: req.user.id });
+    await logActivity(req.user.id, req.user.username, "add_expense", expense.title);
     res.status(201).json(expense);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
-// ── UPDATE ──────────────────────────────────────────
+// ── UPDATE ────────────────────────────────────────────
 router.put("/:id", async (req, res) => {
   try {
-    const expense = await Expense.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, runValidators: true,
-    });
+    const expense = await Expense.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      req.body, { new: true, runValidators: true }
+    );
     if (!expense) return res.status(404).json({ error: "Not found" });
+    await logActivity(req.user.id, req.user.username, "edit_expense", expense.title);
     res.json(expense);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
-// ── DELETE ──────────────────────────────────────────
+// ── DELETE ────────────────────────────────────────────
 router.delete("/:id", async (req, res) => {
   try {
-    const expense = await Expense.findByIdAndDelete(req.params.id);
+    const expense = await Expense.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     if (!expense) return res.status(404).json({ error: "Not found" });
+    await logActivity(req.user.id, req.user.username, "delete_expense", expense.title);
     res.json({ message: "Deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;
