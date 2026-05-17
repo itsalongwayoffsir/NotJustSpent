@@ -1,4 +1,4 @@
-# NotJustSpent 
+# NotJustSpent 💸
 
 A personal finance tracker developed for the young generation that goes beyond expenses, as it can also track your income and savings.
 
@@ -6,84 +6,52 @@ A personal finance tracker developed for the young generation that goes beyond e
 
 ## Problem Statement
 
-Many finance tracker apps only focus on spending. NotJustSpent gives users the opportunity not only to quickly record their daily expenses, but also to track their income and deposits, all in one streamlined single-page interface.
+Many finance tracker apps only focus on spending. NotJustSpent gives users the opportunity not only to quickly record their daily expenses, but also to track their income and deposits, all in one streamlined single-page interface. Users can log transactions, visualise spending patterns, and stay on top of their monthly budget — all without leaving a single page.
 
 ---
 
 ## Tech Stack
 
-| Layer       | Technology                          |
-|-------------|-------------------------------------|
-| Frontend    | HTML, CSS, JavaScript               |
-| Styling     | Custom CSS with CSS variables       |
-| Charts      | Chart.js 4.4                        |
-| Backend     | Node.js + Express.js                |
-| Database    | MongoDB Atlas (cloud) via Mongoose  |
-| Fonts       | DM Sans (Google Fonts)              |
-| Deployment  | Local (Node.js) / Render-ready      |
+| Layer       | Technology                           |
+|-------------|--------------------------------------|
+| Frontend    | Vanilla HTML, CSS, JavaScript (ES6+) |
+| Styling     | Custom CSS with CSS variables        |
+| Charts      | Chart.js 4.4                         |
+| Backend     | Node.js + Express.js                 |
+| Database    | MongoDB Atlas (cloud) via Mongoose   |
+| Auth        | JWT (jsonwebtoken) + bcryptjs        |
+| Fonts       | DM Sans (Google Fonts)               |
+| Deployment  | Render (backend) + MongoDB Atlas     |
 
 ---
 
-## Features
+## How to Run
 
--  **Single-page application** no page reloads; all views are dynamically rendered
--  **Full CRUD** on all three collections (Expenses, Income, Savings)
--  **Add expense** with title, category, amount, date, and optional note
--  **Category filter chips** filter expenses by Food, Transport, Shopping, Entertainment, Study, or Bills
--  **Auto-select category** clicking a chip pre-fills the category dropdown in the add form
--  **Monthly filter** all records and charts respond to the selected month
--  **Edit modal** inline editing without leaving the page
--  **Analyse page** 4 charts including daily spending bar, expense category donut, income bar, savings bar
--  **Summary stats** monthly totals for spent, income, and savings with net balance
--  **Motivational messages** contextual feedback based on the month's financial data
--  **Error toasts** red/dark toast notifications for success and failure states
--  **AUD currency** amounts displayed as AUD $
-
----
-
-## Folder Structure
-
-```
-notjustspent/
-├── public/
-│   └── index.html          # Single-page frontend (HTML + CSS + JS)
-├── routes/
-│   ├── expenses.js         # CRUD routes for expenses
-│   ├── income.js           # CRUD routes for income
-│   └── savings.js          # CRUD routes for savings deposits
-├── server.js               # Express app entry point
-├── package.json            # Node.js dependencies
-├── .env.example            # Environment variable template
-├── .gitignore
-└── README.md
-```
-
----
-
-## Getting Started
-
-### 1. Prerequisites
-- [Node.js](https://nodejs.org) (v18+)
+### Prerequisites
+- [Node.js](https://nodejs.org) v18+
 - A free [MongoDB Atlas](https://www.mongodb.com/atlas) account
 
-### 2. Clone and install
+### Setup
 ```bash
-git clone https://github.com/YOUR_USERNAME/notjustspent.git
-cd notjustspent
+git clone https://github.com/itsalongwayoffsir/NotJustSpent.git
+cd NotJustSpent
 npm install
 ```
 
-### 3. Configure environment
-```bash
-cp .env.example .env
+### Configure environment
+Copy `.env.example` to `.env` and fill in your values:
 ```
-Edit `.env` and paste your MongoDB Atlas connection string:
-```
-MONGO_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/notjustspent?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/notjustspent
+JWT_SECRET=your_secret_key_here
 PORT=3000
 ```
 
-### 4. Run
+### Load sample data (optional)
+```bash
+node seed_belle_may.js
+```
+
+### Start the server
 ```bash
 npm start
 ```
@@ -91,26 +59,132 @@ Visit `http://localhost:3000`
 
 ---
 
+## Features
+
+### Authentication
+- ✅ User registration with email, username, and password
+- ✅ Password hashing using bcryptjs (12 salt rounds)
+- ✅ JWT-based login with 7-day token expiry
+- ✅ Auto-login on page refresh using localStorage token
+- ✅ Show/hide password toggle on login and register forms
+- ✅ Role-based access control (user / admin)
+
+### Expenses
+- ✅ Add expense with title, category, amount, date, description
+- ✅ Edit and delete expenses
+- ✅ Filter by category using chip buttons
+- ✅ Filter by month
+- ✅ **Live search** — real-time filtering as user types, with dropdown suggestions and keyword highlighting
+- ✅ Input validation with shake animation and inline error messages
+
+### Income & Savings
+- ✅ Add, edit, delete income records
+- ✅ Add, edit, delete savings deposits
+- ✅ Monthly totals displayed on dashboard
+
+### Analytics (Analyse page)
+- ✅ Monthly summary: total income, total spent, total saved, net balance
+- ✅ Daily spending bar chart
+- ✅ Expense category donut chart with amount + percentage on hover
+- ✅ Income and savings bar charts
+- ✅ Motivational message based on financial performance
+
+### User Profile
+- ✅ Edit username, email, and avatar (emoji picker)
+- ✅ Username uniqueness enforced on the server
+- ✅ Profile changes reflected instantly in the sidebar
+
+### Admin Panel
+- ✅ View all registered users with role badges
+- ✅ Promote/demote users between admin and user roles
+- ✅ Delete user accounts
+- ✅ Activity log — records every login, logout, and CRUD operation with timestamp
+- ✅ Admin-only access enforced via JWT middleware
+
+### UX & Accessibility
+- ✅ Single-page application — no page reloads
+- ✅ Responsive mobile design with bottom tab navigation
+- ✅ Page fade + slide animations
+- ✅ Loading skeleton and spinner
+- ✅ Keyboard navigability (Tab + Enter/Space)
+- ✅ ARIA labels and roles for screen reader support
+- ✅ Toast notifications for all actions
+- ✅ Smart caching to avoid redundant API calls
+
+---
+
+## Folder Structure
+
+```
+NotJustSpent/
+├── public/
+│   └── index.html              # Single-page frontend (HTML + CSS + JS)
+├── routes/
+│   ├── auth.js                 # Register, login, logout, profile update
+│   ├── expenses.js             # CRUD routes for expenses (auth-protected)
+│   ├── income.js               # CRUD routes for income (auth-protected)
+│   ├── savings.js              # CRUD routes for savings (auth-protected)
+│   └── admin.js                # Admin-only: user management + activity logs
+├── models/
+│   ├── User.js                 # User schema (username, email, password hash, role, avatar)
+│   └── Activity.js             # Activity log schema (userId, action, detail, timestamp)
+├── middleware/
+│   └── auth.js                 # JWT verification + admin role check middleware
+├── database-export/
+│   ├── expenses.json           # Sample expense data
+│   ├── income.json             # Sample income data
+│   └── savings.json            # Sample savings data
+├── server.js                   # Express app entry point
+├── seed_belle_may.js           # Script to seed May 2026 sample data
+├── package.json
+├── .env.example                # Environment variable template
+├── .gitignore
+└── README.md
+```
+
+---
+
+## Workload Allocation
+
+This is an **individual assignment**. All code was written by a single student.
+
+| File | Author |
+|------|--------|
+| `public/index.html` | Individual |
+| `routes/auth.js` | Individual |
+| `routes/expenses.js` | Individual |
+| `routes/income.js` | Individual |
+| `routes/savings.js` | Individual |
+| `routes/admin.js` | Individual |
+| `models/User.js` | Individual |
+| `models/Activity.js` | Individual |
+| `middleware/auth.js` | Individual |
+| `server.js` | Individual |
+
+---
+
 ## Database Export
 
-Sample data for the three collections is provided in `/database-export/`:
-- `expenses.json`
-- `income.json`
-- `savings.json`
-
-To import into MongoDB Atlas:
+Sample data is available in `/database-export/`. To import:
 ```bash
-mongoimport --uri="YOUR_MONGO_URI" --collection=expenses --file=database-export/expenses.json --jsonArray
-mongoimport --uri="YOUR_MONGO_URI" --collection=income   --file=database-export/income.json   --jsonArray
-mongoimport --uri="YOUR_MONGO_URI" --collection=savings  --file=database-export/savings.json  --jsonArray
+node seed_belle_may.js
 ```
+This seeds 30 expenses, 4 income records, and 3 savings deposits for May 2026.
+
+---
+
+## Live Demo
+
+🌐 [https://notjustspent.onrender.com](https://notjustspent.onrender.com)
+
+> Note: The free Render instance may take ~50 seconds to wake up after inactivity.
 
 ---
 
 ## Challenges Overcome
 
-1. **Custom delete confirmation modal** :the browser's built-in confirm() dialog was blocked in certain environments, so a custom modal overlay was built to handle delete confirmations instead.
-2. **Keeping charts in sync with the month filter** :a shared CACHE object was used so that switching to the Analyse page reuses already-fetched data instead of making new API calls, making the tab switch instant.
-3. **Reducing API load time** :instead of fetching expenses, income, and savings one by one, Promise.all() was used to send all three requests in parallel, which noticeably sped up page refreshes.
-4. **Record identity between frontend and MongoDB** :early versions used a custom uid() function for IDs, but this caused edit/delete bugs once the backend was added. Switching to MongoDB's native _id field fixed this entirely.
-5. **SPA state without a framework** :without React or Vue, state was managed manually using an in-memory CACHE object, so category filtering rerenders instantly from cache rather than hitting the database each time.
+1. **Custom delete confirmation modal** — the browser's built-in `confirm()` dialog was blocked in certain environments, so a custom modal overlay was built to handle delete confirmations reliably.
+2. **JWT token scoping per user** — all database queries were updated to filter by `userId` so each user only sees their own data, and edits/deletes verify ownership before proceeding.
+3. **Role-based access control** — a two-layer middleware system was implemented: `authMiddleware` verifies the JWT on every protected route, and `adminMiddleware` additionally checks the user's role before granting access to admin endpoints.
+4. **Live search with suggestions** — implemented real-time filtering that simultaneously updates the table and shows a dropdown of matching suggestions, using an in-memory cache to avoid repeated API calls on each keystroke.
+5. **SPA state management without a framework** — all UI state (auth, cache, filters, search query) was managed manually using JavaScript variables and localStorage, requiring careful coordination to keep the interface consistent across page navigation.
