@@ -83,7 +83,7 @@ module.exports = { router, logActivity };
 // ── UPDATE PROFILE ────────────────────────────
 router.put("/profile", authMiddleware, async (req, res) => {
   try {
-    const { username, email, avatar } = req.body;
+    const { username, email, avatar, currentPassword, newPassword } = req.body;
     const userId = req.user.id;
 
     // Check username uniqueness (exclude current user)
@@ -92,13 +92,23 @@ router.put("/profile", authMiddleware, async (req, res) => {
       if (existing) return res.status(400).json({ error: "Username already taken" });
     }
 
-    const updated = await User.findByIdAndUpdate(
-      userId,
-      { ...(username && { username }), ...(email && { email }), ...(avatar && { avatar }) },
-      { new: true }
-    ).select("-password");
+    const user = await User.findById(userId);
 
-    res.json({ user: { id: updated._id, username: updated.username, role: updated.role, avatar: updated.avatar } });
+    // Handle password change
+    if (currentPassword && newPassword) {
+      const match = await user.comparePassword(currentPassword);
+      if (!match) return res.status(400).json({ error: "Current password is incorrect" });
+      if (newPassword.length < 6) return res.status(400).json({ error: "New password must be at least 6 characters" });
+      user.password = newPassword; // will be hashed by pre-save hook
+    }
+
+    if (username) user.username = username;
+    if (email)    user.email    = email;
+    if (avatar !== undefined) user.avatar = avatar;
+
+    await user.save();
+
+    res.json({ user: { id: user._id, username: user.username, role: user.role, avatar: user.avatar } });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
