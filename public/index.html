@@ -597,9 +597,10 @@
     </div>
     <div id="admin-users-panel">
       <div class="section">
-        <div style="margin-bottom:16px;position:relative;max-width:320px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray)" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="adminUserSearch" placeholder="Search users..." oninput="filterAdminUsers()" style="padding-left:34px" aria-label="Search users">
+        <div style="margin-bottom:16px" class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="adminUserSearch" placeholder="Search users by name, email or role..." oninput="filterAdminUsers()" onfocus="filterAdminUsers()" onblur="hideAdminUserSearch()" autocomplete="off" aria-label="Search users">
+          <div class="search-suggestions" id="adminUserSuggestions"></div>
         </div>
         <table class="records-table">
           <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
@@ -610,6 +611,11 @@
     </div>
     <div id="admin-activity-panel" style="display:none">
       <div class="section">
+        <div style="margin-bottom:16px" class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="adminActivitySearch" placeholder="Search by user or action..." oninput="filterAdminActivity()" onfocus="filterAdminActivity()" onblur="hideAdminActivitySearch()" autocomplete="off" aria-label="Search activity">
+          <div class="search-suggestions" id="adminActivitySuggestions"></div>
+        </div>
         <table class="records-table">
           <thead><tr><th>User</th><th>Action</th><th>Detail</th><th>Time</th></tr></thead>
           <tbody id="admin-activity-tbody"></tbody>
@@ -1155,7 +1161,9 @@ function switchAdminTab(tab) {
 }
 
 let ALL_USERS = [];
+let ALL_ACTIVITIES = [];
 
+/* ─── Admin User Search ─── */
 function filterAdminUsers() {
   const q = (document.getElementById('adminUserSearch')?.value || '').toLowerCase().trim();
   const filtered = q ? ALL_USERS.filter(u =>
@@ -1164,6 +1172,95 @@ function filterAdminUsers() {
     u.role.toLowerCase().includes(q)
   ) : ALL_USERS;
   renderAdminUsers(filtered);
+  showAdminUserSuggestions(q);
+}
+
+function showAdminUserSuggestions(q) {
+  const box = document.getElementById('adminUserSuggestions');
+  if (!q || !ALL_USERS.length) { box.classList.remove('open'); return; }
+  const matches = ALL_USERS.filter(u =>
+    u.username.toLowerCase().includes(q) ||
+    u.email.toLowerCase().includes(q)
+  ).slice(0, 5);
+  if (!matches.length) { box.classList.remove('open'); return; }
+  box.innerHTML = matches.map(u => `
+    <div class="suggestion-item" onmousedown="selectAdminUserSuggestion('${esc(u.username)}')">
+      <span style="font-weight:500">${highlightText(u.username, q)}</span>
+      <span style="color:var(--gray);font-size:12px">${highlightText(u.email, q)}</span>
+      <span class="role-badge ${u.role}" style="margin-left:auto">${u.role}</span>
+    </div>`).join('');
+  box.classList.add('open');
+}
+
+function selectAdminUserSuggestion(username) {
+  document.getElementById('adminUserSearch').value = username;
+  document.getElementById('adminUserSuggestions').classList.remove('open');
+  filterAdminUsers();
+}
+
+function hideAdminUserSearch() {
+  setTimeout(() => document.getElementById('adminUserSuggestions').classList.remove('open'), 200);
+}
+
+/* ─── Admin Activity Search ─── */
+function filterAdminActivity() {
+  const q = (document.getElementById('adminActivitySearch')?.value || '').toLowerCase().trim();
+  const filtered = q ? ALL_ACTIVITIES.filter(a =>
+    a.username.toLowerCase().includes(q) ||
+    a.action.toLowerCase().includes(q) ||
+    (a.detail||'').toLowerCase().includes(q)
+  ) : ALL_ACTIVITIES;
+  renderAdminActivity(filtered);
+  showAdminActivitySuggestions(q);
+}
+
+function showAdminActivitySuggestions(q) {
+  const box = document.getElementById('adminActivitySuggestions');
+  if (!q || !ALL_ACTIVITIES.length) { box.classList.remove('open'); return; }
+  // Show unique matching usernames/actions as suggestions
+  const seen = new Set();
+  const matches = [];
+  for (const a of ALL_ACTIVITIES) {
+    if (a.username.toLowerCase().includes(q) && !seen.has(a.username)) {
+      seen.add(a.username);
+      matches.push({ label: a.username, sub: 'user', val: a.username });
+    }
+    if (a.action.toLowerCase().includes(q) && !seen.has(a.action)) {
+      seen.add(a.action);
+      matches.push({ label: a.action, sub: 'action', val: a.action });
+    }
+    if (matches.length >= 5) break;
+  }
+  if (!matches.length) { box.classList.remove('open'); return; }
+  box.innerHTML = matches.map(m => `
+    <div class="suggestion-item" onmousedown="selectAdminActivitySuggestion('${esc(m.val)}')">
+      <span>${highlightText(m.label, q)}</span>
+      <span class="suggestion-cat" style="background:var(--midnight-faint);color:var(--midnight)">${m.sub}</span>
+    </div>`).join('');
+  box.classList.add('open');
+}
+
+function selectAdminActivitySuggestion(val) {
+  document.getElementById('adminActivitySearch').value = val;
+  document.getElementById('adminActivitySuggestions').classList.remove('open');
+  filterAdminActivity();
+}
+
+function hideAdminActivitySearch() {
+  setTimeout(() => document.getElementById('adminActivitySuggestions').classList.remove('open'), 200);
+}
+
+function renderAdminActivity(activities) {
+  const tbody = document.getElementById('admin-activity-tbody');
+  const empty = document.getElementById('admin-activity-empty');
+  if (!activities.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  tbody.innerHTML = activities.map(a => `<tr>
+    <td style="font-weight:500">${esc(a.username)}</td>
+    <td><span class="action-tag">${esc(a.action)}</span></td>
+    <td style="color:var(--gray);font-size:12px">${esc(a.detail)||'—'}</td>
+    <td style="color:var(--gray);font-size:12px">${fmtTime(a.createdAt)}</td>
+  </tr>`).join('');
 }
 
 function renderAdminUsers(users) {
@@ -1198,16 +1295,8 @@ async function loadAdmin() {
   } else {
     try {
       const acts = await api.getActivities();
-      const tbody = document.getElementById('admin-activity-tbody');
-      const empty = document.getElementById('admin-activity-empty');
-      if (!acts.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-      empty.style.display='none';
-      tbody.innerHTML = acts.map(a => `<tr>
-        <td style="font-weight:500">${esc(a.username)}</td>
-        <td><span class="action-tag">${esc(a.action)}</span></td>
-        <td style="color:var(--gray);font-size:12px">${esc(a.detail)||'—'}</td>
-        <td style="color:var(--gray);font-size:12px">${fmtTime(a.createdAt)}</td>
-      </tr>`).join('');
+      ALL_ACTIVITIES = acts;
+      renderAdminActivity(acts);
     } catch(err) { showToast('Error loading activities: '+err.message, true); }
   }
 }
