@@ -318,13 +318,31 @@
     .highlight { background: rgba(150,192,206,0.4); border-radius: 3px; padding: 0 2px; }
 
 
+
+    /* ─── COLLAPSIBLE SECTIONS ─── */
+    .collapse-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--gray); padding: 4px; border-radius: 6px;
+      display: flex; align-items: center; transition: all 0.15s;
+      margin-right: 4px;
+    }
+    .collapse-btn:hover { background: var(--midnight-faint); color: var(--midnight); }
+    .collapse-btn svg { transition: transform 0.25s ease; }
+    .collapse-btn.collapsed svg { transform: rotate(-90deg); }
+    .section-body {
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      max-height: 2000px; opacity: 1;
+    }
+    .section-body.collapsed { max-height: 0; opacity: 0; }
     /* ─── DARK MODE ─── */
     body.dark {
-      --alabaster: #1a1a1a;
-      --white: #242424;
-      --gray-light: #3a3a3a;
-      --text: #e8e8e8;
+      --alabaster: #111827;
+      --white: #1f2937;
+      --gray-light: #374151;
+      --text: #f9fafb;
       --midnight-faint: rgba(150,192,206,0.06);
+      background: #111827;
     }
     body.dark .stat-card,
     body.dark .section,
@@ -332,17 +350,40 @@
     body.dark .chart-card,
     body.dark .modal,
     body.dark .profile-modal,
-    body.dark .auth-card { background: #242424; }
+    body.dark .auth-card {
+      background: #1f2937;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
     body.dark input,
     body.dark select,
-    body.dark textarea { background: #2e2e2e; color: #e8e8e8; border-color: rgba(255,255,255,0.12); }
-    body.dark .add-form { background: #1e1e1e; border-color: #3a3a3a; }
+    body.dark textarea {
+      background: #374151; color: #f9fafb;
+      border-color: rgba(255,255,255,0.1);
+    }
+    body.dark input::placeholder,
+    body.dark textarea::placeholder { color: #9ca3af; }
+    body.dark .add-form { background: #111827; border-color: #374151; }
     body.dark .records-table td,
-    body.dark .records-table th { border-color: #2e2e2e; }
-    body.dark .search-suggestions { background: #242424; border-color: #3a3a3a; }
-    body.dark .suggestion-item:hover { background: #2e2e2e; }
-    body.dark .suggestion-item { border-color: #2e2e2e; }
-    body.dark .month-input { background: #2e2e2e; color: #e8e8e8; }
+    body.dark .records-table th { border-color: #374151; }
+    body.dark .records-table tbody tr:hover td { background: rgba(150,192,206,0.05); }
+    body.dark .search-suggestions { background: #1f2937; border-color: #374151; }
+    body.dark .suggestion-item:hover { background: #374151; }
+    body.dark .suggestion-item { border-color: #374151; }
+    body.dark .month-input { background: #374151; color: #f9fafb; }
+    body.dark .page-title { color: #f9fafb; }
+    body.dark .page-subtitle { color: #9ca3af; }
+    body.dark .section-title { color: #f9fafb; }
+    body.dark .stat-value { color: #f9fafb; }
+    body.dark .modal-title { color: #f9fafb; }
+    body.dark .btn-secondary { color: #9ca3af; border-color: #374151; }
+    body.dark .btn-secondary:hover { background: #374151; }
+    body.dark .admin-tab { background: #1f2937; border-color: #374151; color: #9ca3af; }
+    body.dark .admin-tab.active { background: var(--midnight); color: white; }
+    body.dark .auth-card { background: #1f2937; }
+    body.dark .auth-title { color: #f9fafb; }
+    body.dark .auth-subtitle { color: #9ca3af; }
+    body.dark .auth-form-group label { color: #9ca3af; }
+    body.dark .form-group label { color: #9ca3af; }
 
     .dark-toggle {
       margin-top: 12px;
@@ -539,7 +580,7 @@
     <!-- EXPENSES -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title"><div class="dot" style="background:var(--maroon)"></div>Expenses</div>
+        <div class="section-title"><button class="collapse-btn" onclick="toggleSection('expenses-body', this)" aria-label="Toggle expenses section"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="dot" style="background:var(--maroon)"></div>Expenses</div>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="btn btn-secondary" onclick="exportExpensesCSV()" style="font-size:12px;padding:7px 13px;display:flex;align-items:center;gap:5px" aria-label="Export expenses as CSV">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -551,6 +592,7 @@
           </button>
         </div>
       </div>
+      <div class="section-body" id="expenses-body">
       <div class="category-chips" id="cat-chips">
         <div class="chip chip-all active" data-cat="All" role="button" tabindex="0" aria-label="Show all" onclick="setExpenseFilter('All')" onkeydown="if(event.key==='Enter'||event.key===' ')setExpenseFilter('All')">All</div>
         <div class="chip chip-food active" data-cat="Food" role="button" tabindex="0" aria-label="Filter Food" onclick="setExpenseFilter('Food')" onkeydown="if(event.key==='Enter'||event.key===' ')setExpenseFilter('Food')">Food</div>
@@ -583,17 +625,19 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
         No expenses yet for this month. Add your first one!
       </div>
+      </div><!-- /expenses-body -->
     </div>
 
     <!-- INCOME -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title"><div class="dot" style="background:var(--midnight)"></div>Income</div>
+        <div class="section-title"><button class="collapse-btn" onclick="toggleSection('income-body', this)" aria-label="Toggle income section"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="dot" style="background:var(--midnight)"></div>Income</div>
         <button class="btn-add" onclick="toggleForm('incf')" style="background:var(--midnight)" aria-label="Add new income">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Income
         </button>
       </div>
+      <div class="section-body" id="income-body">
       <div class="add-form" id="incf">
         <div class="form-row">
           <div class="form-group"><label for="incf-name">Source / Name</label><input type="text" id="incf-name" placeholder="e.g. Monthly salary…"><span class="field-error" id="incf-name-err"></span></div>
@@ -610,17 +654,19 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         No income records yet.
       </div>
+      </div><!-- /income-body -->
     </div>
 
     <!-- SAVINGS -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title"><div class="dot" style="background:var(--light-blue)"></div>Savings / Deposits</div>
+        <div class="section-title"><button class="collapse-btn" onclick="toggleSection('savings-body', this)" aria-label="Toggle savings section"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="dot" style="background:var(--light-blue)"></div>Savings / Deposits</div>
         <button class="btn-add" onclick="toggleForm('savf')" style="background:#2577a0" aria-label="Add new savings deposit">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Deposit
         </button>
       </div>
+      <div class="section-body" id="savings-body">
       <div class="add-form" id="savf">
         <div class="form-row">
           <div class="form-group"><label for="savf-label">Label</label><input type="text" id="savf-label" placeholder="e.g. Emergency fund…"><span class="field-error" id="savf-label-err"></span></div>
@@ -638,6 +684,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         No savings deposits yet. Start building your fund!
       </div>
+      </div><!-- /savings-body -->
     </div>
   </div>
 
@@ -979,6 +1026,7 @@ function init() {
   document.getElementById('monthFilterA').value = ym;
   ['ef-date','incf-date','savf-date'].forEach(id => { const el=document.getElementById(id); if(el) el.value=today; });
   showSkeletons();
+  initSections();
   refreshAll();
 }
 
@@ -1690,6 +1738,30 @@ function initDarkMode() {
   }
 }
 initDarkMode();
+
+
+/* ═══════════════════════════════════════
+   COLLAPSIBLE SECTIONS
+═══════════════════════════════════════ */
+function toggleSection(bodyId, btn) {
+  const body = document.getElementById(bodyId);
+  const isCollapsed = body.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed', isCollapsed);
+  // Save state to localStorage
+  localStorage.setItem('njs_section_' + bodyId, isCollapsed ? '1' : '0');
+}
+
+function initSections() {
+  ['expenses-body', 'income-body', 'savings-body'].forEach(id => {
+    const saved = localStorage.getItem('njs_section_' + id);
+    if (saved === '1') {
+      const body = document.getElementById(id);
+      const btn  = body?.previousElementSibling?.querySelector('.collapse-btn');
+      if (body) body.classList.add('collapsed');
+      if (btn)  btn.classList.add('collapsed');
+    }
+  });
+}
 
 /* ─── KEYBOARD LOGIN ─── */
 document.addEventListener('keydown', e => {
