@@ -1,17 +1,17 @@
 [
   {
     "label": "Japan trip fund",
-    "amount": 300.0,
-    "date": "2026-04-01"
+    "amount": 350.0,
+    "date": "2026-05-01"
   },
   {
     "label": "Emergency fund",
-    "amount": 200.0,
-    "date": "2026-04-15"
+    "amount": 150.0,
+    "date": "2026-05-10"
   },
   {
     "label": "Japan trip fund",
-    "amount": 150.0,
-    "date": "2026-04-22"
+    "amount": 200.0,
+    "date": "2026-05-20"
   }
 ]
