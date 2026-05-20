@@ -9,6 +9,7 @@ const savingsSchema = new mongoose.Schema({
   label:  { type: String, required: true, trim: true },
   amount: { type: Number, required: true, min: 0 },
   date:   { type: String, required: true },
+  goal:   { type: Number, default: 0 },
 }, { timestamps: true });
 
 const Saving = mongoose.model("Saving", savingsSchema);

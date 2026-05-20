@@ -19,6 +19,20 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--alabaster); color: var(--text); display: flex; min-height: 100vh; font-size: 14px; overflow-x: hidden; }
 
 
+
+    /* ─── PASSWORD STRENGTH ─── */
+    .strength-bar {
+      height: 4px; border-radius: 2px; margin-top: 6px;
+      background: var(--gray-light); overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%; border-radius: 2px;
+      transition: width 0.3s ease, background 0.3s ease;
+      width: 0%;
+    }
+    .strength-label {
+      font-size: 11px; margin-top: 4px; font-weight: 600;
+    }
     /* ─── PASSWORD TOGGLE ─── */
     .password-wrap { position: relative; }
     .password-wrap input { padding-right: 40px; }
@@ -303,6 +317,53 @@
     /* ─── SEARCH HIGHLIGHT ─── */
     .highlight { background: rgba(150,192,206,0.4); border-radius: 3px; padding: 0 2px; }
 
+
+    /* ─── DARK MODE ─── */
+    body.dark {
+      --alabaster: #1a1a1a;
+      --white: #242424;
+      --gray-light: #3a3a3a;
+      --text: #e8e8e8;
+      --midnight-faint: rgba(150,192,206,0.06);
+    }
+    body.dark .stat-card,
+    body.dark .section,
+    body.dark .a-stat,
+    body.dark .chart-card,
+    body.dark .modal,
+    body.dark .profile-modal,
+    body.dark .auth-card { background: #242424; }
+    body.dark input,
+    body.dark select,
+    body.dark textarea { background: #2e2e2e; color: #e8e8e8; border-color: rgba(255,255,255,0.12); }
+    body.dark .add-form { background: #1e1e1e; border-color: #3a3a3a; }
+    body.dark .records-table td,
+    body.dark .records-table th { border-color: #2e2e2e; }
+    body.dark .search-suggestions { background: #242424; border-color: #3a3a3a; }
+    body.dark .suggestion-item:hover { background: #2e2e2e; }
+    body.dark .suggestion-item { border-color: #2e2e2e; }
+    body.dark .month-input { background: #2e2e2e; color: #e8e8e8; }
+
+    .dark-toggle {
+      margin-top: 12px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; padding: 8px 0;
+    }
+    .dark-toggle-label {
+      font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 500;
+    }
+    .toggle-switch {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: rgba(255,255,255,0.15); position: relative;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle-switch.on { background: var(--light-blue); }
+    .toggle-knob {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: white; position: absolute; top: 2px; left: 2px;
+      transition: left 0.2s;
+    }
+    .toggle-switch.on .toggle-knob { left: 18px; }
     /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
       .sidebar { width: 100%; height: 64px; top: auto; bottom: 0; left: 0; flex-direction: row; align-items: center; padding: 0; min-height: unset; border-top: 1px solid rgba(255,255,255,0.1); }
@@ -382,11 +443,13 @@
     <div class="auth-form-group">
       <label for="reg-password">Password</label>
       <div class="password-wrap">
-        <input type="password" id="reg-password" placeholder="At least 6 characters" autocomplete="new-password">
+        <input type="password" id="reg-password" placeholder="At least 6 characters" autocomplete="new-password" oninput="checkStrength(this.value)">
         <button class="eye-btn" type="button" onclick="togglePwd('reg-password', this)" aria-label="Toggle password visibility" tabindex="-1">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label" style="color:var(--gray)"></div>
     </div>
     <button class="auth-btn" onclick="doRegister()">Create Account</button>
     <div class="auth-switch">Already have an account? <a onclick="switchAuth('login')">Sign in</a></div>
@@ -421,6 +484,10 @@
         <div class="user-name" id="user-name-display">—</div>
         <div class="user-role" id="user-role-display">—</div>
       </div>
+    </div>
+    <div class="dark-toggle" onclick="toggleDarkMode()" role="button" tabindex="0" aria-label="Toggle dark mode" onkeydown="if(event.key==='Enter')toggleDarkMode()">
+      <div class="toggle-switch" id="darkToggle"><div class="toggle-knob"></div></div>
+      <span class="dark-toggle-label">Dark mode</span>
     </div>
     <button class="btn-logout" onclick="doLogout()">Sign out</button>
   </div>
@@ -473,10 +540,16 @@
     <div class="section">
       <div class="section-header">
         <div class="section-title"><div class="dot" style="background:var(--maroon)"></div>Expenses</div>
-        <button class="btn-add" onclick="toggleForm('ef')" aria-label="Add new expense">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Expense
-        </button>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-secondary" onclick="exportExpensesCSV()" style="font-size:12px;padding:7px 13px;display:flex;align-items:center;gap:5px" aria-label="Export expenses as CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn-add" onclick="toggleForm('ef')" aria-label="Add new expense">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Expense
+          </button>
+        </div>
       </div>
       <div class="category-chips" id="cat-chips">
         <div class="chip chip-all active" data-cat="All" role="button" tabindex="0" aria-label="Show all" onclick="setExpenseFilter('All')" onkeydown="if(event.key==='Enter'||event.key===' ')setExpenseFilter('All')">All</div>
@@ -553,6 +626,7 @@
           <div class="form-group"><label for="savf-label">Label</label><input type="text" id="savf-label" placeholder="e.g. Emergency fund…"><span class="field-error" id="savf-label-err"></span></div>
           <div class="form-group" style="max-width:130px"><label for="savf-amount">Amount ($)</label><input type="number" id="savf-amount" placeholder="0.00" min="0" step="0.01"><span class="field-error" id="savf-amount-err"></span></div>
           <div class="form-group" style="max-width:155px"><label for="savf-date">Date</label><input type="date" id="savf-date"></div>
+          <div class="form-group" style="max-width:130px"><label for="savf-goal">Goal ($) <span style="font-weight:400;color:var(--gray)">(optional)</span></label><input type="number" id="savf-goal" placeholder="e.g. 2000" min="0" step="0.01"></div>
         </div>
         <div class="form-actions">
           <button class="btn btn-secondary" onclick="toggleForm('savf')">Cancel</button>
@@ -1058,7 +1132,10 @@ async function addSaving() {
   if (!amount||amount<=0){ showFieldError('savf-amount','savf-amount-err','Enter a valid amount'); valid=false; }
   if (!valid) { document.getElementById('savf').classList.add('shake'); setTimeout(()=>document.getElementById('savf').classList.remove('shake'),400); return; }
   try {
-    await api.addSaving({ label, amount, date }); labelEl.value=''; amountEl.value='';
+    const goal = parseFloat(document.getElementById('savf-goal')?.value) || 0;
+    await api.addSaving({ label, amount, date, ...(goal > 0 && { goal }) });
+    labelEl.value=''; amountEl.value='';
+    const goalEl = document.getElementById('savf-goal'); if (goalEl) goalEl.value='';
     document.getElementById('savf').classList.remove('open');
     await refreshAll(); showToast('✓ Deposit saved!');
   } catch(err) { showToast('Error: '+err.message, true); }
@@ -1069,15 +1146,28 @@ function renderSavings() {
   const tbody=document.getElementById('sav-tbody'), empty=document.getElementById('sav-empty');
   if (!items.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  tbody.innerHTML = items.map(e => `<tr>
-    <td style="font-weight:500">${esc(e.label)}</td>
+  tbody.innerHTML = items.map(e => {
+    const hasGoal = e.goal && e.goal > 0;
+    const pct = hasGoal ? Math.min(100, ((e.amount / e.goal) * 100)).toFixed(0) : 0;
+    return `<tr>
+    <td>
+      <div style="font-weight:500">${esc(e.label)}</div>
+      ${hasGoal ? `<div style="margin-top:5px;width:140px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--gray);margin-bottom:3px">
+          <span>${fmt(e.amount)} / ${fmt(e.goal)}</span><span>${pct}%</span>
+        </div>
+        <div style="height:4px;background:var(--alabaster);border-radius:2px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:var(--midnight);border-radius:2px;transition:width 0.3s"></div>
+        </div>
+      </div>` : ''}
+    </td>
     <td style="color:var(--gray)">${fmtDate(e.date)}</td>
     <td class="amount-sav">+${fmt(e.amount)}</td>
     <td><div class="action-btns">
       <button class="icon-btn edit" onclick="openEdit('saving','${e._id}')" title="Edit" aria-label="Edit saving">${SVG_EDIT}</button>
       <button class="icon-btn del"  onclick="deleteRec('saving','${e._id}')" title="Delete" aria-label="Delete saving">${SVG_DEL}</button>
     </div></td>
-  </tr>`).join('');
+  </tr>`;}).join('');
 }
 
 /* ═══════════════════════════════════════
@@ -1523,6 +1613,84 @@ function togglePwd(inputId, btn) {
     ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
     : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 }
+
+/* ═══════════════════════════════════════
+   PASSWORD STRENGTH
+═══════════════════════════════════════ */
+function checkStrength(pw) {
+  const fill  = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label');
+  if (!fill || !label) return;
+  if (!pw) { fill.style.width='0%'; label.textContent=''; return; }
+
+  let score = 0;
+  if (pw.length >= 6)  score++;
+  if (pw.length >= 10) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  const levels = [
+    { pct:'20%', color:'#e53e3e', text:'Weak' },
+    { pct:'40%', color:'#dd6b20', text:'Fair' },
+    { pct:'60%', color:'#d69e2e', text:'Good' },
+    { pct:'80%', color:'#38a169', text:'Strong' },
+    { pct:'100%',color:'#276749', text:'Very Strong' },
+  ];
+  const lvl = levels[Math.min(score, 4)];
+  fill.style.width   = lvl.pct;
+  fill.style.background = lvl.color;
+  label.textContent  = lvl.text;
+  label.style.color  = lvl.color;
+}
+
+/* ═══════════════════════════════════════
+   EXPORT CSV
+═══════════════════════════════════════ */
+function exportExpensesCSV() {
+  const expenses = CACHE.expenses;
+  if (!expenses.length) { showToast('No expenses to export for this month.', true); return; }
+
+  const headers = ['Title', 'Category', 'Amount', 'Date', 'Description'];
+  const rows = expenses.map(e => [
+    `"${(e.title||'').replace(/"/g,'""')}"`,
+    `"${e.category||''}"`,
+    e.amount,
+    e.date,
+    `"${(e.description||'').replace(/"/g,'""')}"`
+  ]);
+
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `expenses-${getMonth()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Exported expenses-' + getMonth() + '.csv');
+}
+
+
+/* ═══════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════ */
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('njs_dark', isDark ? '1' : '0');
+  document.getElementById('darkToggle').classList.toggle('on', isDark);
+}
+
+function initDarkMode() {
+  const isDark = localStorage.getItem('njs_dark') === '1';
+  if (isDark) {
+    document.body.classList.add('dark');
+    const toggle = document.getElementById('darkToggle');
+    if (toggle) toggle.classList.add('on');
+  }
+}
+initDarkMode();
+
 /* ─── KEYBOARD LOGIN ─── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
