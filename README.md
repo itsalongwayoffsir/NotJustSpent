@@ -63,24 +63,29 @@ Visit `http://localhost:3000`
 
 ### Authentication
 - User registration with email, username, and password
-- Password hashing using bcryptjs
+- Password hashing using bcryptjs with 12 salt rounds
+- Real-time password strength indicator during registration
+- Show/hide password toggle on login and register forms
 - JWT-based login with 7-day token expiry
 - Auto-login on page refresh using localStorage token
-- Show/hide password toggle on login and register forms
 - Role-based access control (user / admin)
 
 ### Expenses
 - Add expense with title, category, amount, date, and description
 - Edit and delete expenses
+- Collapsible section to keep the interface tidy
 - Filter by category using chip buttons
 - Filter by month
 - Live search with real-time filtering, dropdown suggestions, and keyword highlighting
+- Export current month's expenses as a CSV file
 - Input validation with shake animation and inline error messages
 
 ### Income and Savings
 - Add, edit, and delete income records
 - Add, edit, and delete savings deposits
-- Monthly totals displayed on dashboard
+- Set a goal amount for each savings deposit, with a progress bar showing how close you are
+- Collapsible sections for both income and savings
+- Monthly totals displayed on the dashboard
 
 ### Analytics
 - Monthly summary showing total income, total spent, total saved, and net balance
@@ -91,21 +96,26 @@ Visit `http://localhost:3000`
 
 ### User Profile
 - Edit username, email, and avatar using an emoji picker
+- Change password with current password verification
 - Username uniqueness enforced on the server
 - Profile changes reflected instantly in the sidebar
 
 ### Admin Panel
 - View all registered users
+- Live search to filter users by name, email, or role
 - Promote or demote users between admin and user roles
 - Delete user accounts
 - Activity log that records every login, logout, and CRUD operation with timestamp
+- Live search in the activity log to filter by user or action type
 - Admin-only access enforced via JWT middleware
 
 ### UX and Accessibility
 - Single-page application with no page reloads
+- Dark mode toggle with preference saved to localStorage
 - Responsive mobile design with bottom tab navigation
 - Page fade and slide animations
 - Loading skeleton and spinner while data loads
+- Collapsible sections with expanded/collapsed state saved to localStorage
 - Keyboard navigability with Tab and Enter/Space support
 - ARIA labels and roles for screen reader support
 - Toast notifications for all user actions
