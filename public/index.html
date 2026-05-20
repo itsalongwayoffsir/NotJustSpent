@@ -337,13 +337,16 @@
     .section-body.collapsed { max-height: 0; opacity: 0; }
     /* ─── DARK MODE ─── */
     body.dark {
-      --alabaster: #111827;
-      --white: #1f2937;
-      --gray-light: #374151;
-      --text: #f9fafb;
-      --midnight-faint: rgba(150,192,206,0.06);
-      background: #111827;
+      --alabaster: #0d1117;
+      --white: #161b22;
+      --gray-light: #30363d;
+      --text: #e6edf3;
+      --midnight-faint: rgba(150,192,206,0.07);
+      background: #0d1117;
+      color: #e6edf3;
     }
+
+    /* Cards & panels */
     body.dark .stat-card,
     body.dark .section,
     body.dark .a-stat,
@@ -351,39 +354,87 @@
     body.dark .modal,
     body.dark .profile-modal,
     body.dark .auth-card {
-      background: #1f2937;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      background: #161b22;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+      border: 1px solid #30363d;
     }
+
+    /* Inputs */
     body.dark input,
     body.dark select,
     body.dark textarea {
-      background: #374151; color: #f9fafb;
-      border-color: rgba(255,255,255,0.1);
+      background: #0d1117;
+      color: #e6edf3;
+      border-color: #30363d;
     }
     body.dark input::placeholder,
-    body.dark textarea::placeholder { color: #9ca3af; }
-    body.dark .add-form { background: #111827; border-color: #374151; }
+    body.dark textarea::placeholder { color: #6e7681; }
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus { border-color: var(--light-blue); }
+
+    /* Forms & tables */
+    body.dark .add-form { background: #0d1117; border-color: #30363d; }
     body.dark .records-table td,
-    body.dark .records-table th { border-color: #374151; }
-    body.dark .records-table tbody tr:hover td { background: rgba(150,192,206,0.05); }
-    body.dark .search-suggestions { background: #1f2937; border-color: #374151; }
-    body.dark .suggestion-item:hover { background: #374151; }
-    body.dark .suggestion-item { border-color: #374151; }
-    body.dark .month-input { background: #374151; color: #f9fafb; }
-    body.dark .page-title { color: #f9fafb; }
-    body.dark .page-subtitle { color: #9ca3af; }
-    body.dark .section-title { color: #f9fafb; }
-    body.dark .stat-value { color: #f9fafb; }
-    body.dark .modal-title { color: #f9fafb; }
-    body.dark .btn-secondary { color: #9ca3af; border-color: #374151; }
-    body.dark .btn-secondary:hover { background: #374151; }
-    body.dark .admin-tab { background: #1f2937; border-color: #374151; color: #9ca3af; }
-    body.dark .admin-tab.active { background: var(--midnight); color: white; }
-    body.dark .auth-card { background: #1f2937; }
-    body.dark .auth-title { color: #f9fafb; }
-    body.dark .auth-subtitle { color: #9ca3af; }
-    body.dark .auth-form-group label { color: #9ca3af; }
-    body.dark .form-group label { color: #9ca3af; }
+    body.dark .records-table th { border-color: #21262d; }
+    body.dark .records-table tbody tr:hover td { background: rgba(150,192,206,0.06); }
+
+    /* Month input */
+    body.dark .month-input { background: #0d1117; color: #e6edf3; border-color: #30363d; }
+
+    /* Search suggestions */
+    body.dark .search-suggestions { background: #161b22; border-color: #30363d; }
+    body.dark .suggestion-item { border-color: #21262d; }
+    body.dark .suggestion-item:hover { background: #21262d; }
+
+    /* Typography */
+    body.dark .page-title  { color: #e6edf3; }
+    body.dark .page-subtitle { color: #8b949e; }
+    body.dark .section-title { color: #e6edf3; }
+    body.dark .stat-value  { color: #e6edf3; }
+    body.dark .stat-label  { color: #8b949e; }
+    body.dark .stat-count  { color: #8b949e; }
+    body.dark .modal-title { color: #e6edf3; }
+    body.dark .logo-name   { color: #e6edf3; }
+    body.dark .chart-card .ct { color: #e6edf3; }
+    body.dark .chart-card .cs { color: #8b949e; }
+    body.dark .a-stat .lbl { color: #8b949e; }
+    body.dark .a-stat .val { color: #e6edf3; }
+
+    /* Buttons */
+    body.dark .btn-secondary { color: #8b949e; border-color: #30363d; background: transparent; }
+    body.dark .btn-secondary:hover { background: #21262d; color: #e6edf3; }
+    body.dark .icon-btn.edit { background: rgba(150,192,206,0.12); color: #96C0CE; }
+    body.dark .icon-btn.edit:hover { background: rgba(150,192,206,0.22); }
+    body.dark .icon-btn.del  { background: rgba(127,3,3,0.2); color: #f87171; }
+    body.dark .icon-btn.del:hover  { background: rgba(127,3,3,0.32); }
+
+    /* Admin tabs */
+    body.dark .admin-tab { background: #161b22; border-color: #30363d; color: #8b949e; }
+    body.dark .admin-tab.active { background: var(--midnight); color: white; border-color: var(--midnight); }
+
+    /* Category chips — keep colors but adjust for dark bg */
+    body.dark .chip-food        { background: rgba(150,192,206,0.18); }
+    body.dark .chip-transport   { background: rgba(216,186,152,0.18); }
+    body.dark .chip-shopping    { background: rgba(127,3,3,0.22); }
+    body.dark .chip-entertainment { background: rgba(15,65,74,0.35); }
+    body.dark .chip-study       { background: rgba(150,192,206,0.25); }
+    body.dark .chip-bills       { background: rgba(216,186,152,0.22); }
+
+    /* Auth screen */
+    body.dark #auth-screen { background: #0d1117; }
+    body.dark .auth-title    { color: #e6edf3; }
+    body.dark .auth-subtitle { color: #8b949e; }
+    body.dark .auth-form-group label { color: #8b949e; }
+    body.dark .auth-error { background: rgba(127,3,3,0.15); }
+
+    /* Form labels */
+    body.dark .form-group label { color: #8b949e; }
+    body.dark .field-error { color: #f87171; }
+
+    /* Collapse button */
+    body.dark .collapse-btn { color: #8b949e; }
+    body.dark .collapse-btn:hover { background: rgba(150,192,206,0.08); color: #e6edf3; }
 
     .dark-toggle {
       margin-top: 12px;
@@ -752,7 +803,7 @@
 <!-- ── PROFILE MODAL ── -->
 <div class="profile-overlay" id="profileModal" onclick="handleProfileOverlay(event)">
   <div class="profile-modal">
-    <div class="modal-title" style="margin-bottom:6px">Edit Profile</div>
+    <div class="modal-title" style="margin-bottom:2px" id="profile-modal-title">Edit Profile</div>
     <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Click your avatar to change it</p>
     <div class="avatar-preview" id="profile-avatar-preview" onclick="toggleAvatarPicker()">?</div>
     <div class="avatar-picker" id="avatarPicker" style="display:none">
@@ -810,7 +861,7 @@
         <div class="form-group">
           <label for="profile-confirm-pw">Confirm New Password</label>
           <div class="password-wrap">
-            <input type="password" id="profile-confirm-pw" placeholder="Repeat new password">
+            <input type="password" id="profile-confirm-pw" placeholder="Confirm">
             <button class="eye-btn" type="button" onclick="togglePwd('profile-confirm-pw', this)" aria-label="Toggle password" tabindex="-1">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -903,6 +954,9 @@ function hideLoader()   { document.getElementById('pageLoader').classList.remove
 
 /* ═══════════════════════════════════════
    API LAYER with JWT
+   All requests automatically attach the JWT token from localStorage.
+   If the server returns 401 (token expired/invalid), the user is
+   automatically logged out and redirected to the login screen.
 ═══════════════════════════════════════ */
 async function apiFetch(path, options={}) {
   const headers = { 'Content-Type': 'application/json' };
@@ -950,7 +1004,7 @@ function switchAuth(mode) {
 
 async function doLogin() {
   const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
+  const password = document.getElementById('login-password').value.trim();
   const errEl = document.getElementById('login-error');
   errEl.classList.remove('show');
   if (!username || !password) { errEl.textContent = 'Please fill in all fields'; errEl.classList.add('show'); return; }
@@ -960,7 +1014,10 @@ async function doLogin() {
     localStorage.setItem('njs_token', TOKEN);
     localStorage.setItem('njs_user', JSON.stringify(CURRENT_USER));
     enterApp();
-  } catch (err) { errEl.textContent = err.message; errEl.classList.add('show'); }
+  } catch (err) {
+    errEl.textContent = err.message.includes('Invalid') ? 'Incorrect username or password.' : err.message;
+    errEl.classList.add('show');
+  }
 }
 
 async function doRegister() {
@@ -973,9 +1030,12 @@ async function doRegister() {
   try {
     const data = await api.register({ username, email, password });
     TOKEN = data.token; CURRENT_USER = data.user;
+    // Store JWT token in localStorage for persistent login across page refreshes.
+    // The token is sent with every API request in the Authorization header.
     localStorage.setItem('njs_token', TOKEN);
     localStorage.setItem('njs_user', JSON.stringify(CURRENT_USER));
     enterApp();
+    setTimeout(() => showToast('Welcome, ' + data.user.username + '! Your account is ready.'), 800);
   } catch (err) { errEl.textContent = err.message; errEl.classList.add('show'); }
 }
 
@@ -1301,7 +1361,10 @@ function switchAdminTab(tab) {
 let ALL_USERS = [];
 let ALL_ACTIVITIES = [];
 
-/* ─── Admin User Search ─── */
+/* ─── Admin User Search ───
+   Filters the cached ALL_USERS array client-side so no extra
+   API call is needed on every keystroke.
+─── */
 function filterAdminUsers() {
   const q = (document.getElementById('adminUserSearch')?.value || '').toLowerCase().trim();
   const filtered = q ? ALL_USERS.filter(u =>
@@ -1365,7 +1428,7 @@ function showAdminActivitySuggestions(q) {
     }
     if (a.action.toLowerCase().includes(q) && !seen.has(a.action)) {
       seen.add(a.action);
-      matches.push({ label: a.action, sub: 'action', val: a.action });
+      matches.push({ label: fmtAction(a.action), sub: 'action', val: a.action });
     }
     if (matches.length >= 5) break;
   }
@@ -1395,7 +1458,7 @@ function renderAdminActivity(activities) {
   empty.style.display='none';
   tbody.innerHTML = activities.map(a => `<tr>
     <td style="font-weight:500">${esc(a.username)}</td>
-    <td><span class="action-tag">${esc(a.action)}</span></td>
+    <td><span class="action-tag">${fmtAction(a.action)}</span></td>
     <td style="color:var(--gray);font-size:12px">${esc(a.detail)||'—'}</td>
     <td style="color:var(--gray);font-size:12px">${fmtTime(a.createdAt)}</td>
   </tr>`).join('');
@@ -1562,6 +1625,7 @@ let selectedAvatar = '';
 function openProfileModal() {
   const u = CURRENT_USER;
   // Pre-fill current values
+  document.getElementById('profile-modal-title').textContent = 'Edit Profile — ' + u.username;
   document.getElementById('profile-username').value = u.username || '';
   document.getElementById('profile-email').value = u.email || '';
   document.getElementById('profile-username-err').textContent = '';
@@ -1665,6 +1729,8 @@ function togglePwd(inputId, btn) {
 /* ═══════════════════════════════════════
    PASSWORD STRENGTH
 ═══════════════════════════════════════ */
+// Evaluates password strength client-side for UX feedback only.
+// The actual password is hashed server-side using bcryptjs before storage.
 function checkStrength(pw) {
   const fill  = document.getElementById('strength-fill');
   const label = document.getElementById('strength-label');
@@ -1695,6 +1761,8 @@ function checkStrength(pw) {
 /* ═══════════════════════════════════════
    EXPORT CSV
 ═══════════════════════════════════════ */
+// Generates a CSV file from the current month's cached expense data
+// and triggers a browser download — no server round-trip needed.
 function exportExpensesCSV() {
   const expenses = CACHE.expenses;
   if (!expenses.length) { showToast('No expenses to export for this month.', true); return; }
@@ -1761,6 +1829,28 @@ function initSections() {
       if (btn)  btn.classList.add('collapsed');
     }
   });
+}
+
+
+/* ═══════════════════════════════════════
+   FORMAT ACTIVITY ACTION LABELS
+═══════════════════════════════════════ */
+function fmtAction(action) {
+  const map = {
+    'login':          'Signed in',
+    'logout':         'Signed out',
+    'register':       'Created account',
+    'add_expense':    'Added expense',
+    'edit_expense':   'Edited expense',
+    'delete_expense': 'Deleted expense',
+    'add_income':     'Added income',
+    'edit_income':    'Edited income',
+    'delete_income':  'Deleted income',
+    'add_saving':     'Added deposit',
+    'edit_saving':    'Edited deposit',
+    'delete_saving':  'Deleted deposit',
+  };
+  return map[action] || action.replace(/_/g, ' ').replace(/\w/g, c => c.toUpperCase());
 }
 
 /* ─── KEYBOARD LOGIN ─── */
